@@ -10,8 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest
@@ -21,21 +20,20 @@ public class SampleControllerTest {
 
     @Test
     public void helloTest() throws Exception {
-        mockMvc.perform(post("/hello"))
-                .andDo(print())
-                .andExpect(status().isMethodNotAllowed())
-        ;
-
-        mockMvc.perform(get("/hello"))
+        mockMvc.perform(get("/hello/123/456"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("hello"))
         ;
+    }
 
-        mockMvc.perform(put("/hello"))
+    @Test
+    public void helloWithNameTest() throws Exception {
+        mockMvc.perform(get("/hello/hjkim"))
                 .andDo(print())
-                .andExpect(status().isMethodNotAllowed())
-//                .andExpect(content().string("hello"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("hello hjkim")) // 가장 구체적인 uri의 handler가 사용된다!
+                .andExpect(handler().handlerType(SampleController.class))
+                .andExpect(handler().methodName("helloWithName"))
         ;
     }
 }
