@@ -1,6 +1,6 @@
 package com.example.webmvc;
 
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -10,8 +10,9 @@ public class SampleController {
 
     @RequestMapping(
             value = "/hello",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.TEXT_PLAIN_VALUE
+//            headers = "!" + HttpHeaders.FROM
+            headers = HttpHeaders.AUTHORIZATION + "=" + "111",
+            params = "name=hjkim"
     )
     @ResponseBody
     public String hello() {
