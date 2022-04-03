@@ -3,9 +3,11 @@ package com.example.webmvc;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
@@ -20,15 +22,27 @@ public class SampleController {
     }
 
     @PostMapping("/events")
-    @ResponseBody
-    public Event postEvent(@Validated(Event.ValidateLimit.class) @ModelAttribute Event event, BindingResult bindingResult) {
+    public String createEvent(@Valid @ModelAttribute Event event,
+                            BindingResult bindingResult,
+                            Model model) {
         if (bindingResult.hasErrors()) {
-            System.out.println("=============================");
-            bindingResult.getAllErrors().forEach(c-> {
-                System.out.println(c.toString());
-            });
+            return "events/form";
         }
-        return event;
+
+        return "redirect:/events/list";
+    }
+
+    @GetMapping("/events/list")
+    public String getEvents(Model model) {
+        Event event = new Event();
+        event.setName("spring");
+        event.setLimit(10);
+
+        List<Event> eventList = new ArrayList<>();
+        eventList.add(event);
+        model.addAttribute(eventList);
+
+        return "events/list";
     }
 
 }
