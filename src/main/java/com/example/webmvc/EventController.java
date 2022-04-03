@@ -1,8 +1,10 @@
 package com.example.webmvc;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -16,6 +18,15 @@ import java.util.List;
 @Controller
 @SessionAttributes("event")
 public class EventController {
+
+    @Autowired
+    EventValidator eventValidator;
+
+    @InitBinder
+    public void initEventBinder(WebDataBinder webDataBinder) {
+        webDataBinder.setDisallowedFields("id");    // 도메인 모델을 쓰고자 할 때
+//        webDataBinder.addValidators(new EventValidator());
+    }
 
     @ModelAttribute
     public void categories(Model model) {
@@ -39,6 +50,7 @@ public class EventController {
         if (bindingResult.hasErrors()) {
             return "events/form-name";
         }
+        eventValidator.validate(event, bindingResult);
         return "redirect:/events/form/limit";
     }
 
@@ -57,7 +69,7 @@ public class EventController {
             return "events/form-limit";
         }
         sessionStatus.setComplete();
-        redirectAttributes.addFlashAttribute("newEvents", event);
+        redirectAttributes.addFlashAttribute("newEvent", event);
         return "redirect:/events/list";
     }
 
