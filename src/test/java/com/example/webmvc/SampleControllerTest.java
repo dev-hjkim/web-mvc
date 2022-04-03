@@ -18,13 +18,22 @@ public class SampleControllerTest {
     MockMvc mockMvc;
 
     @Test
-    public void getEventsWithId() throws Exception {
+    public void postEvent() throws Exception {
         mockMvc.perform(post("/events")
                         .param("name", "hjkim")
                         .param("limit", "20"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("hjkim"))
+        ;
+    }
+
+    @Test
+    public void eventForm() throws Exception {
+        mockMvc.perform(get("/events/form"))
+                .andDo(print())
+                .andExpect(view().name("/events/form"))
+                .andExpect(model().attributeExists("event"))
         ;
     }
 
