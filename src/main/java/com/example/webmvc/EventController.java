@@ -17,6 +17,16 @@ import java.util.List;
 @SessionAttributes("event")
 public class EventController {
 
+    @ModelAttribute
+    public void categories(Model model) {
+        model.addAttribute("categories", List.of("study", "ceminar", "hobby", "social"));
+    }
+
+//    @ModelAttribute("categories")
+//    public List<String> categories(Model model) {
+//        return List.of("study", "ceminar", "hobby", "social");
+//    }
+
     @GetMapping("/events/form/name")
     public String eventsFormName(Model model) {
         model.addAttribute("event", new Event());
