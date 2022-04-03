@@ -22,6 +22,24 @@ public class EventController {
     @Autowired
     EventValidator eventValidator;
 
+    @ExceptionHandler({EventException.class, RuntimeException.class})
+    public String eventErrorHandler(RuntimeException ex, Model model) {
+        model.addAttribute("message", "runtime error");
+        return "error";
+    }
+
+//    @ExceptionHandler
+//    public String eventErrorHandler(EventException exception, Model model) {
+//        model.addAttribute("message", "event error");
+//        return "error";
+//    }
+//
+//    @ExceptionHandler
+//    public String runtimeErrorHandler(EventException exception, Model model) {
+//        model.addAttribute("message", "runtime error");
+//        return "error";
+//    }
+
     @InitBinder
     public void initEventBinder(WebDataBinder webDataBinder) {
         webDataBinder.setDisallowedFields("id");    // 도메인 모델을 쓰고자 할 때
@@ -40,8 +58,9 @@ public class EventController {
 
     @GetMapping("/events/form/name")
     public String eventsFormName(Model model) {
-        model.addAttribute("event", new Event());
-        return "events/form-name";
+        throw new EventException();
+//        model.addAttribute("event", new Event());
+//        return "events/form-name";
     }
 
     @PostMapping("/events/form/name")
