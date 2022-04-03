@@ -22,40 +22,6 @@ public class EventController {
     @Autowired
     EventValidator eventValidator;
 
-    @ExceptionHandler({EventException.class, RuntimeException.class})
-    public String eventErrorHandler(RuntimeException ex, Model model) {
-        model.addAttribute("message", "runtime error");
-        return "error";
-    }
-
-//    @ExceptionHandler
-//    public String eventErrorHandler(EventException exception, Model model) {
-//        model.addAttribute("message", "event error");
-//        return "error";
-//    }
-//
-//    @ExceptionHandler
-//    public String runtimeErrorHandler(EventException exception, Model model) {
-//        model.addAttribute("message", "runtime error");
-//        return "error";
-//    }
-
-    @InitBinder
-    public void initEventBinder(WebDataBinder webDataBinder) {
-        webDataBinder.setDisallowedFields("id");    // 도메인 모델을 쓰고자 할 때
-//        webDataBinder.addValidators(new EventValidator());
-    }
-
-    @ModelAttribute
-    public void categories(Model model) {
-        model.addAttribute("categories", List.of("study", "ceminar", "hobby", "social"));
-    }
-
-//    @ModelAttribute("categories")
-//    public List<String> categories(Model model) {
-//        return List.of("study", "ceminar", "hobby", "social");
-//    }
-
     @GetMapping("/events/form/name")
     public String eventsFormName(Model model) {
         throw new EventException();
