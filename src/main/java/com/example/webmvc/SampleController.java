@@ -2,6 +2,7 @@ package com.example.webmvc;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -18,11 +19,13 @@ public class SampleController {
 
     @PostMapping("/events")
     @ResponseBody
-    public Event getEvent(@RequestParam String name,
-                          @RequestParam Integer limit) {
-        Event event = new Event();
-        event.setName(name);
-        event.setLimit(limit);
+    public Event postEvent(@ModelAttribute Event event, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            System.out.println("=============================");
+            bindingResult.getAllErrors().forEach(c-> {
+                System.out.println(c.toString());
+            });
+        }
         return event;
     }
 
