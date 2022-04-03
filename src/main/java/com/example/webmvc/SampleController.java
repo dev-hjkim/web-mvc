@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -11,24 +12,38 @@ import java.util.List;
 
 
 @Controller
+@SessionAttributes("event")
 public class SampleController {
 
-    @GetMapping("/events/form")
-    public String eventsForm(Model model) {
-        Event newEvent = new Event();
-        newEvent.setLimit(50);
-        model.addAttribute("event", newEvent);
-        return "events/form";
+    @GetMapping("/events/form/name")
+    public String eventsFormName(Model model) {
+        model.addAttribute("event", new Event());
+        return "events/form-name";
     }
 
-    @PostMapping("/events")
-    public String createEvent(@Valid @ModelAttribute Event event,
-                            BindingResult bindingResult,
-                            Model model) {
+    @PostMapping("/events/form/name")
+    public String eventsFormNameSubmit(@Valid @ModelAttribute Event event,
+                              BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "events/form";
+            return "events/form-name";
         }
+        return "redirect:/events/form/limit";
+    }
 
+    @GetMapping("/events/form/limit")
+    public String eventsFormLimit(@ModelAttribute Event event, Model model) {
+        model.addAttribute("event", event);
+        return "events/form-limit";
+    }
+
+    @PostMapping("/events/form/limit")
+    public String eventsFormLimitSubmit(@Valid @ModelAttribute Event event,
+                                        BindingResult bindingResult,
+                                        SessionStatus sessionStatus) {
+        if (bindingResult.hasErrors()) {
+            return "events/form-limit";
+        }
+        sessionStatus.setComplete();
         return "redirect:/events/list";
     }
 
