@@ -3,15 +3,17 @@ package com.example.webmvc;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+
 @Controller
 public class SampleController {
 
-    @RequestMapping("/events/{id}")
+    @PostMapping("/events")
     @ResponseBody
-    public Event getEvent(@PathVariable("id") Integer idValue, @MatrixVariable String name) {
+    public Event getEvent(@RequestParam String name,
+                          @RequestParam Integer limit) {
         Event event = new Event();
-        event.setId(idValue);
         event.setName(name);
+        event.setLimit(limit);
         return event;
     }
 
