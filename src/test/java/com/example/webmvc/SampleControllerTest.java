@@ -8,6 +8,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -31,5 +33,20 @@ public class SampleControllerTest {
 //        Object event = request.getSession().getAttribute("event");
 //        System.out.println(event);
 //    }
+
+    @Test
+    public void getEvents() throws Exception {
+        Event newEvent = new Event();
+        newEvent.setName("hello world");
+        newEvent.setLimit(1000);
+
+        mockMvc.perform(get("/events/list")
+                .sessionAttr("visitTime", LocalDateTime.now())
+                .flashAttr("newEvent", newEvent))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(xpath("//p").nodeCount(2))
+        ;
+    }
 
 }
